@@ -1,16 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// google sign-in doesnt even work either way lmfao
-if (!window.chrome) {
-  window.chrome = {
-    app: { isInstalled: false, InstallState: {}, RunningState: {} },
-    runtime: {},
-    webstore: {},
-    csi: () => { },
-    loadTimes: () => { },
-  };
-}
-
 contextBridge.exposeInMainWorld('api', {
   send: (channel, data) => ipcRenderer.send(channel, data),
   receive: (channel, func) => ipcRenderer.on(channel, (event, ...args) => func(...args)),
@@ -91,7 +80,6 @@ window.addEventListener('DOMContentLoaded', () => {
     if (!tabList || !tabContent) return;
     if (document.getElementById('sc-wrapper-tab')) return; // already injected
 
-    // add tab
     const tab = document.createElement('li');
     tab.className = 'g-tabs-item';
     tab.innerHTML = `<a class="g-tabs-link" id="sc-wrapper-tab" href="#" style="cursor:pointer">Wrapper</a>`;
@@ -99,7 +87,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     tab.addEventListener('click', (e) => {
       e.preventDefault();
-      // deactivate all tabs
       tabList.querySelectorAll('.g-tabs-link').forEach(t => t.classList.remove('active'));
       tab.querySelector('.g-tabs-link').classList.add('active');
       tabContent.innerHTML = '';
@@ -255,8 +242,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const rgb = hexToRgb(hex);
     const targetHue = hexToHue(hex);
     const hueRotation = targetHue - 20; // soundcloud orange is ~20deg
-    const saturation = 1.5; // increase saturation to compensate for desaturation in dark mode
-    const brightness = 1.2; // increase brightness to compensate for dark mode
+
+    // these two kinda help the color be more accurate
+    const saturation = 1.5;
+    const brightness = 1.2;
 
     accentStyle.textContent = `
     :root, html, body {
@@ -304,7 +293,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(accentStyle);
   }
 
-  // watch for settings page navigation
   const settingsObserver = new MutationObserver(() => {
     if (window.location.pathname.startsWith('/settings')) {
       injectWrapperSettings();
@@ -317,13 +305,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function loadSettings(settings) {
-    // transparency
     document.documentElement.style.setProperty('--wrapper-transparency', Math.min(1 - settings.transparency, 0.998));
 
-    // rounded corners toggle
     document.documentElement.classList.toggle('sc-rounded-window', !!settings.roundedCorners);
 
-    // accent color
     applyAccentColor(settings.accentColor);
 
     const label = document.getElementById('sc-topbar-label');
@@ -358,7 +343,7 @@ function getStyles() {
       border-radius: 12px 12px 0 0;
     }
 
-    /* ---- topbar ---- */
+    /* topbar */
     #sc-topbar {
       position: fixed;
       top: 0; left: 0;
@@ -451,13 +436,13 @@ function getStyles() {
     .sc-btn.max { background: #b0c0b3; cursor: default; }
     .sc-btn.max:hover { filter: none; transform: none; }
 
-    /* ---- push soundcloud below topbar ---- */
+    /* push soundcloud below topbar */
     header.sc-selection-disabled.fixed.g-z-index-header {
       top: 44px !important;
       background: rgb(from var(--background-surface-color) r g b / var(--wrapper-transparency, 0.85));
     }
 
-    /* ---- scrollbar ---- */
+    /* scrollbar */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb {

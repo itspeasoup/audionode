@@ -6,7 +6,7 @@ const { fork } = require('child_process');
 const { title } = require('process');
 const { autoUpdater } = require('electron-updater');
 
-// check for updates silently when the app is ready
+// automatic updates woohoo yaay
 app.whenReady().then(() => {
   autoUpdater.checkForUpdatesAndNotify();
 });
@@ -15,6 +15,7 @@ let mainWindow;
 let pluginScripts = [];
 let pluginProcesses = [];
 
+// there's so much shit idek if acrylic and vibrancy will work im on WINDOWS 10 DUDE
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -39,13 +40,12 @@ function createWindow() {
     }
   });
 
-  // change this line to include the urls filter object so details.requestHeaders isn't blank!
+  // this was for some reason like the hardest part
   mainWindow.webContents.session.webRequest.onHeadersReceived({ urls: ['*://*/*'] }, (details, callback) => {
     const headers = { ...details.responseHeaders };
     const url = details.url;
 
     if (url.includes('api-auth.soundcloud.com') || url.includes('secure.soundcloud.com') || url.includes('accounts.google.com')) {
-      // try to get the real origin, otherwise smartly fallback based on what url is being hit
       let requestOrigin = details.requestHeaders?.['Origin'] || details.requestHeaders?.['origin'];
 
       if (!requestOrigin) {
@@ -111,7 +111,7 @@ function createWindow() {
 
   ipcMain.on('update-track', (_, track) => {
     pluginProcesses.forEach(proc => {
-      if (proc && proc.connected) { // check here!
+      if (proc && proc.connected) {
         try { proc.send({ type: 'update-track', track }); } catch (_) { }
       }
     });
@@ -162,10 +162,8 @@ function loadPlugins() {
   fs.readdirSync(pluginsDir).forEach((folder) => {
     const pluginDir = path.join(pluginsDir, folder);
 
-    // make sure it's actually a directory
     if (!fs.statSync(pluginDir).isDirectory()) return;
 
-    // look up settings entry. if undefined, default to true!
     const isEnabled = currentSettings.plugins[folder]?.enabled ?? true;
     if (!isEnabled) {
       console.log(`plugin ${folder} is disabled via settings, skipping`);
@@ -184,18 +182,15 @@ function loadPlugins() {
         const plugin = fork(indexPath);
         pluginProcesses.push(plugin);
 
-        // background fork -> main -> webview
         plugin.on('message', (message) => {
           if (mainWindow && !mainWindow.isDestroyed()) {
             mainWindow.webContents.send('plugin:to-webview', message);
           }
         });
 
-        // handle crashes or unexpected exits
         plugin.on('exit', (code) => {
           console.log(`plugin ${folder} exited with code ${code}`);
 
-          // code 0 means it closed normally, anything else means it crashed!
           if (code !== 0 && code !== null) {
             const { Notification } = require('electron');
             new Notification({
@@ -229,7 +224,7 @@ function terminatePluginProcesses() {
   pluginProcesses.forEach(proc => {
     try {
       if (proc.connected) {
-        proc.kill('SIGKILL'); // forces it to die instantly right now
+        proc.kill('SIGKILL');
       }
     } catch (_) { }
   });

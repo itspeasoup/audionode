@@ -1,0 +1,32 @@
+name: build and publish audionode
+
+on:
+  push:
+    tags:
+      - 'v*' # triggers whenever you push a tag like v1.0.0
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    steps:
+      - name: check out repository code
+        uses: actions/checkout@v4
+
+      - name: install node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: install dependencies
+        run: npm ci
+
+      - name: build and publish electron app
+        run: npx electron-builder --publish always
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
