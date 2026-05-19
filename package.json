@@ -1,0 +1,51 @@
+{
+  "name": "audionode",
+  "version": "1.0.0",
+  "author": {
+    "name": "veggiepeasoup",
+    "email": "veggiepeasoup@gmail.com"
+  },
+  "description": "soundcloud electron desktop client",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^42.1.0",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.levicodes.audionode",
+    "productName": "audionode",
+    "directories": {
+      "output": "dist"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "itspeasoup",
+      "repo": "audionode"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "settings.js",
+      "index.js",
+      "webview.js",
+      "assets/**/*",
+      "plugins/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.music"
+    }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3"
+  }
+}

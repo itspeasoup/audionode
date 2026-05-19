@@ -1,0 +1,10 @@
+# binaries
+dist/
+dist/win-unpacked/
+
+# dependencies
+node_modules/
+
+# operating system junk
+.DS_Store
+Thumbs.db
