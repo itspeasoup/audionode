@@ -31,6 +31,6 @@ setInterval(() => {
             coverImageUrl,
         };
 
-        window.api.send('update-track', track);
+        window.api.send('plugin:to-backend', { type: 'update-track', track });
     }
 }, 1000);

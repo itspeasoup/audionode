@@ -109,14 +109,6 @@ function createWindow() {
   mainWindow.webContents.on('did-navigate', sendNavState);
   mainWindow.webContents.on('did-navigate-in-page', sendNavState);
 
-  ipcMain.on('update-track', (_, track) => {
-    pluginProcesses.forEach(proc => {
-      if (proc && proc.connected) {
-        try { proc.send({ type: 'update-track', track }); } catch (_) { }
-      }
-    });
-  });
-
   ipcMain.on('plugin:to-backend', (_, payload) => {
     pluginProcesses.forEach(proc => {
       if (proc && proc.connected) {
@@ -147,8 +139,9 @@ function createWindow() {
 function loadPlugins() {
   terminatePluginProcesses();
 
-  const pluginsDir = path.join(app.getPath('userData'), 'plugins');
-  pluginScripts = [];
+  const pluginsDir = app.isPackaged
+    ? path.join(process.resourcesPath, 'plugins')
+    : path.join(__dirname, 'plugins'); pluginScripts = [];
 
   if (!fs.existsSync(pluginsDir)) {
     fs.mkdirSync(pluginsDir, { recursive: true });
