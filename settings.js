@@ -11,7 +11,7 @@ const DEFAULTS = {
   topbarLabel: 'SoundCloud',
   accentColor: '#ff5500',
   autoLaunch: false,
-  plugins: {}, // Structure: { pluginName: { enabled: true } }
+  plugins: {},
 };
 
 function load() {
@@ -40,11 +40,10 @@ function save(settings) {
 
 let _settings = load();
 
-// Sync native OS features with saved configuration on launch
 try {
   app.setLoginItemSettings({ openAtLogin: _settings.autoLaunch });
 } catch (e) {
-  console.error('Failed to set initial launch settings:', e);
+  console.error('failed to set initial launch settings:', e);
 }
 
 function get() { return _settings; }
@@ -52,12 +51,11 @@ function get() { return _settings; }
 function set(key, value) {
   _settings[key] = value;
   
-  // Native OS Hook for Auto-Launch functionality
   if (key === 'autoLaunch') {
     try {
       app.setLoginItemSettings({ openAtLogin: !!value });
     } catch (e) {
-      console.error('Failed to update native autoLaunch configuration:', e);
+      console.error('failed to update native autoLaunch configuration:', e);
     }
   }
 
@@ -69,7 +67,6 @@ function setPlugin(name, enabled) {
   save(_settings);
 }
 
-// Around line 70 in settings.js
 function setupIpc(mainWindow, getPluginList, reloadPluginsCallback) {
   ipcMain.handle('settings:get', () => {
     return { settings: _settings, plugins: getPluginList ? getPluginList() : [] };
@@ -84,7 +81,6 @@ function setupIpc(mainWindow, getPluginList, reloadPluginsCallback) {
   ipcMain.handle('settings:setPlugin', (_, name, enabled) => {
     setPlugin(name, enabled);
     
-    // Smoothly hot-reload the processes in the main thread
     if (typeof reloadPluginsCallback === 'function') {
       reloadPluginsCallback();
     }
