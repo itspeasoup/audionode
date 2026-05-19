@@ -40,6 +40,11 @@
       "icon": "assets/icon.png",
       "requestedExecutionLevel": "asInvoker"
     },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
     "mac": {
       "target": "dmg",
       "category": "public.app-category.music"
