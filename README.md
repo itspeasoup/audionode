@@ -16,7 +16,7 @@ webview does the same in reverse. sends out data using `window.api.send('plugin:
 > [!IMPORTANT] 
 > "how do i make plugins?"
 >
-> plugins consist of two files (one is always volunteary) and one folder: index.js, webview.js and node_modules. index.js is ran in the node environment, while webview.js is ran in electron.
+> plugins consist of two files (one is always voluntary) and one folder: index.js, webview.js and node_modules. index.js runs in the node environment, while webview.js runs on the webpage.
 >
 > node_modules infact isn't necessary and it is **recommended** to use something like vercel/ncc for index.js: `npx @vercel/ncc build plugins/your-plugin/index.js -e electron -o dist`
 >
@@ -24,15 +24,15 @@ webview does the same in reverse. sends out data using `window.api.send('plugin:
 
 ## features
 
-first and most important feature, plugins. there's quite literally no limit to what you can make.
+first and most important feature, plugins. there's quite literally no limit to what you can make except for your imagination (and hardware)!!
 
-second, altho smaller, the macos-like titlebar. i am proud of it, even if it isn't 100% functionally accurate.
+second, although smaller, the macos-like titlebar. i am proud of it, even if it isn't completely functionally accurate.
 
 second, customization. now this isn't something like betterdiscord or vencord where they have styles, but you have the small happy stuff. 
 
 like accent colors or controllable window transparency. you can change the title too. or disable plugins you use but don't wanna use at the moment.
 
-and last, the FACT THAT IT'S FULLY OPENSOURCE and works JUST LIKE IT SHOULD in your browser!!! only with extra stuff!!
+and last, the FACT THAT IT'S FULLY OPEN SOURCE and works JUST LIKE IT SHOULD in your browser!!! only with extra stuff!!
 
 ## problems
 
