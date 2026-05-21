@@ -1,6 +1,8 @@
 # audionode
 my cool and awesome soundcloud wrapper with plugin support
 
+**look here !!!!! to change the wrapper settings, go to regular soundcloud settings, you'll see the wrapper tab there!!!!!!!!**
+
 <img width="1200" height="800" alt="audionode_RMR63aXvSi" src="https://github.com/user-attachments/assets/0d350d55-f1e9-4599-98b6-452519bb6c3c" />
 
 look it even has transparency ain't that fuckin cool
